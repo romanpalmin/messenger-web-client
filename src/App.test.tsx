@@ -25,7 +25,7 @@ describe('App', () => {
     await user.type(screen.getByLabelText('idInstance'), '1000000001');
     await user.type(screen.getByLabelText('apiTokenInstance'), 'fake-token');
     await user.click(screen.getByRole('button', { name: 'Войти' }));
-    expect(await screen.findByText(/Вы вошли в инстанс 1000000001/)).toBeInTheDocument();
+    expect(await screen.findByText(/Инстанс 1000000001/)).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Выйти' }));
     expect(screen.getByRole('heading', { name: 'Вход' })).toBeInTheDocument();

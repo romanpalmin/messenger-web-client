@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Credentials } from './api/types';
+import { ChatApp } from './features/chat/ChatApp';
 import { LoginForm } from './features/login/LoginForm';
 import { clearCredentials, loadCredentials, saveCredentials } from './features/login/session';
 
@@ -18,16 +19,12 @@ export default function App() {
   }
 
   return (
-    <main>
-      <p>Вы вошли в инстанс {credentials.idInstance}.</p>
-      <button
-        onClick={() => {
-          clearCredentials();
-          setCredentials(null);
-        }}
-      >
-        Выйти
-      </button>
-    </main>
+    <ChatApp
+      credentials={credentials}
+      onLogout={() => {
+        clearCredentials();
+        setCredentials(null);
+      }}
+    />
   );
 }

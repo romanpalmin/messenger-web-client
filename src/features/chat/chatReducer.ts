@@ -7,7 +7,8 @@ export type ChatAction =
   | { type: 'chatSelected'; chatId: string }
   | { type: 'messageSending'; chatId: string; localId: string; text: string; timestamp: number }
   | { type: 'messageSent'; chatId: string; localId: string; idMessage: string }
-  | { type: 'messageFailed'; chatId: string; localId: string; error: string };
+  | { type: 'messageFailed'; chatId: string; localId: string; error: string }
+  | { type: 'messageReceived'; chatId: string; idMessage: string; text: string; timestamp: number };
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
@@ -45,6 +46,20 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         status: 'failed',
         error: action.error,
       }));
+    case 'messageReceived': {
+      const chat = state.chats.find((c) => c.chatId === action.chatId);
+      // Чужой чат (не открывали по номеру) игнорируем; повторное уведомление с тем же idMessage — тоже.
+      if (!chat || chat.messages.some((m) => m.idMessage === action.idMessage)) return state;
+      const message: ChatMessage = {
+        key: action.idMessage,
+        idMessage: action.idMessage,
+        direction: 'in',
+        text: action.text,
+        timestamp: action.timestamp,
+        status: 'sent',
+      };
+      return updateChat(state, action.chatId, (c) => ({ ...c, messages: [...c.messages, message] }));
+    }
   }
 }
 

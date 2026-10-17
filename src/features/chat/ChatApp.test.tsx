@@ -1,6 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 import { server } from '../../test/server';
 import { ChatApp } from './ChatApp';
 
@@ -95,5 +95,55 @@ describe('ChatApp', () => {
 
     await screen.findByLabelText('Сообщение');
     expect(screen.getByRole('button', { name: 'Отправить' })).toBeDisabled();
+  });
+});
+
+describe('ChatApp: входящие', () => {
+  /** Отдаёт уведомления только после `gate.open()`, иначе они придут до создания чата и будут отброшены. */
+  function mockNotifications(...bodies: unknown[]) {
+    let call = 0;
+    let open!: () => void;
+    const gate = new Promise<void>((resolve) => (open = resolve));
+    server.use(
+      http.get(`${base}/receiveNotification/fake-token`, async () => {
+        await gate;
+        const i = call++;
+        if (i < bodies.length) return HttpResponse.json({ receiptId: i + 1, body: bodies[i] });
+        await delay('infinite');
+        return HttpResponse.json(null);
+      }),
+      http.delete(`${base}/deleteNotification/fake-token/:id`, () => HttpResponse.json({ result: true })),
+    );
+    return open;
+  }
+  const incoming = (idMessage: string, text: string) => ({
+    typeWebhook: 'incomingMessageReceived',
+    timestamp: 1,
+    idMessage,
+    senderData: { chatId: '10000000', sender: '10000000' },
+    messageData: { typeMessage: 'textMessage', textMessageData: { textMessage: text } },
+  });
+
+  it('показывает входящее сообщение один раз, даже если уведомление пришло дважды', async () => {
+    mockCheckAccount();
+    const openGate = mockNotifications(incoming('A1', 'Ответ собеседника'), incoming('A1', 'Ответ собеседника'));
+    const user = userEvent.setup();
+    render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+    await createChat(user);
+
+    await screen.findByLabelText('Сообщение');
+    openGate();
+
+    // Два текста: само сообщение и превью в списке чатов. Дубль уведомления третьего не добавил.
+    expect(await screen.findAllByText('Ответ собеседника')).toHaveLength(2);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(screen.getAllByText('Ответ собеседника')).toHaveLength(2);
+  });
+
+  it('при 401 останавливает опрос и сообщает об этом', async () => {
+    server.use(http.get(`${base}/receiveNotification/fake-token`, () => new HttpResponse(null, { status: 401 })));
+    render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Получение сообщений остановлено');
   });
 });

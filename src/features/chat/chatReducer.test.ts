@@ -58,4 +58,24 @@ describe('chatReducer', () => {
     expect(state.chats[0].messages).toEqual([]);
     expect(state.chats[1].messages).toHaveLength(1);
   });
+
+  describe('messageReceived', () => {
+    const received = { type: 'messageReceived', chatId: '1', idMessage: 'A1', text: 'Привет', timestamp: 5 } as const;
+
+    it('добавляет входящее сообщение в открытый чат', () => {
+      const next = chatReducer(opened, received);
+      expect(next.chats[0].messages).toEqual([
+        { key: 'A1', idMessage: 'A1', direction: 'in', text: 'Привет', timestamp: 5, status: 'sent' },
+      ]);
+    });
+
+    it('дедуплицирует по idMessage: повтор не меняет состояние', () => {
+      const once = chatReducer(opened, received);
+      expect(chatReducer(once, received)).toBe(once);
+    });
+
+    it('игнорирует сообщение из чата, который не открывали', () => {
+      expect(chatReducer(opened, { ...received, chatId: 'other' })).toBe(opened);
+    });
+  });
 });

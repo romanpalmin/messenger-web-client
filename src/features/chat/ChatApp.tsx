@@ -1,12 +1,14 @@
-import { useMemo, useReducer } from 'react';
+import { useMemo, useReducer, useState } from 'react';
 import { ApiError, createApiClient } from '../../api/client';
 import type { Credentials } from '../../api/types';
 import { ChatList } from './ChatList';
+import { toReceivedAction } from './incoming';
 import { chatReducer, initialChatState } from './chatReducer';
 import { MessageComposer } from './MessageComposer';
 import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
 import { formatPhone } from './phone';
+import { useNotifications } from './useNotifications';
 
 interface Props {
   credentials: Credentials;
@@ -18,7 +20,17 @@ const nowSeconds = () => Math.floor(Date.now() / 1000);
 export function ChatApp({ credentials, onLogout }: Props) {
   const client = useMemo(() => createApiClient(credentials), [credentials]);
   const [state, dispatch] = useReducer(chatReducer, initialChatState);
+  const [pollingStopped, setPollingStopped] = useState(false);
   const activeChat = state.chats.find((chat) => chat.chatId === state.activeChatId) ?? null;
+
+  useNotifications(
+    client,
+    (body) => {
+      const action = toReceivedAction(body);
+      if (action) dispatch(action);
+    },
+    () => setPollingStopped(true),
+  );
 
   async function send(text: string) {
     if (!activeChat) return;
@@ -49,6 +61,11 @@ export function ChatApp({ credentials, onLogout }: Props) {
         />
       </aside>
       <main className="conversation">
+        {pollingStopped && (
+          <p role="alert" className="conversation__offline">
+            Получение сообщений остановлено: проверьте idInstance и токен и войдите заново.
+          </p>
+        )}
         {activeChat ? (
           <>
             <header className="conversation__header">{formatPhone(activeChat.phone)}</header>

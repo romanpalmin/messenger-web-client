@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Собственный узор: простые иконки, нарисованные для проекта. Цвет задаётся в CSS через mask. -->
+  <g transform="translate(20 22) rotate(-18 22.8 22.8) scale(1.9)"><path d="M12 21s-7-4.6-9.3-9C1 8.6 3 5 6.5 5c2 0 3.7 1.1 5.5 3 1.8-1.9 3.5-3 5.5-3C21 5 23 8.6 21.3 12 19 16.4 12 21 12 21z"/></g>
+  <g transform="translate(135 26) rotate(14 22.8 22.8) scale(1.9)"><path d="M12 2l3 7 7 .5-5.5 4.5 2 7-6.5-4-6.5 4 2-7L2 9.5 9 9z"/></g>
+  <g transform="translate(250 20) rotate(-9 22.8 22.8) scale(1.9)"><path d="M4 4h16v11H9l-5 4z"/><path d="M8 8h8M8 11h5"/></g>
+  <g transform="translate(70 112) rotate(24 22.8 22.8) scale(1.9)"><path d="M2 12L22 3l-7 18-4-7z"/><path d="M22 3L11 14"/></g>
+  <g transform="translate(190 118) rotate(-13 22.8 22.8) scale(1.9)"><path d="M7 18a4 4 0 0 1 0-8 5 5 0 0 1 9.5-1A4.5 4.5 0 0 1 17 18z"/></g>
+  <g transform="translate(298 108) rotate(21 22.8 22.8) scale(1.9)"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></g>
+  <g transform="translate(14 202) rotate(-26 22.8 22.8) scale(1.9)"><circle cx="12" cy="9" r="6"/><path d="M12 15c-1 2 1 3 0 6"/></g>
+  <g transform="translate(125 210) rotate(17 22.8 22.8) scale(1.9)"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></g>
+  <g transform="translate(240 198) rotate(-15 22.8 22.8) scale(1.9)"><circle cx="12" cy="12" r="9"/><path d="M9 10h.01M15 10h.01M8 14a5 5 0 0 0 8 0"/></g>
+  <g transform="translate(68 292) rotate(29 22.8 22.8) scale(1.9)"><path d="M5 19C5 9 11 4 20 4c0 9-5 15-15 15z"/><path d="M5 19l8-8"/></g>
+  <g transform="translate(185 296) rotate(-11 22.8 22.8) scale(1.9)"><path d="M5 8h11v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/></g>
+  <g transform="translate(294 290) rotate(13 22.8 22.8) scale(1.9)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(108 78) rotate(8 9.6 9.6) scale(0.8)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(222 82) rotate(-10 8.4 8.4) scale(0.7)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(326 60) rotate(15 8.4 8.4) scale(0.7)"><path d="M12 21s-7-4.6-9.3-9C1 8.6 3 5 6.5 5c2 0 3.7 1.1 5.5 3 1.8-1.9 3.5-3 5.5-3C21 5 23 8.6 21.3 12 19 16.4 12 21 12 21z"/></g>
+  <g transform="translate(46 166) rotate(-6 8.4 8.4) scale(0.7)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(170 168) rotate(12 9.6 9.6) scale(0.8)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(300 170) rotate(-12 8.4 8.4) scale(0.7)"><path d="M12 21s-7-4.6-9.3-9C1 8.6 3 5 6.5 5c2 0 3.7 1.1 5.5 3 1.8-1.9 3.5-3 5.5-3C21 5 23 8.6 21.3 12 19 16.4 12 21 12 21z"/></g>
+  <g transform="translate(112 256) rotate(10 8.4 8.4) scale(0.7)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(236 262) rotate(-8 9.6 9.6) scale(0.8)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+  <g transform="translate(20 300) rotate(5 7.2 7.2) scale(0.6)"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></g>
+</svg>

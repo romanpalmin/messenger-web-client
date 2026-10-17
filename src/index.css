@@ -1,18 +1,86 @@
 :root {
+  color-scheme: light dark;
+  /* «Классическая» тема: светлые панели на зелёном градиенте */
+  --wallpaper: linear-gradient(160deg, #c9d98f 0%, #7fb77e 55%, #5fa58a 100%);
+  --panel: #ffffff;
+  --bubble-in: #ffffff;
+  --bubble-out: #eeffde;
+  --accent: #3390ec;
+  --accent-text: #ffffff;
+  --text: #000000;
+  --muted: #707579;
+  --field: #f4f4f5;
+  --field-border: #dadce0;
+  --hover: #f1f3f4;
+  --selected: #3390ec;
+  --selected-text: #ffffff;
+  --error: #d93025;
+  --shadow: 0 1px 3px rgb(0 0 0 / 15%);
+  --pattern-color: rgb(30 100 55 / 25%);
+}
+
+/* «Ночная» тема: автоматически по системной настройке, пока пользователь не выбрал тему кнопкой */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --wallpaper: linear-gradient(160deg, #0b0b0f 0%, #14101f 100%);
+    --panel: #212121;
+    --bubble-in: #212121;
+    --bubble-out: #8774e1;
+    --accent: #8774e1;
+    --text: #ffffff;
+    --muted: #aaaaaa;
+    --field: #181818;
+    --field-border: #3a3a3a;
+    --hover: #2c2c2c;
+    --selected: #8774e1;
+    --selected-text: #ffffff;
+    --error: #ff6b6b;
+    --shadow: none;
+    --pattern-color: rgb(135 116 225 / 22%);
+  }
+}
+
+/* Явный выбор пользователя: атрибут data-theme на <html> (ставит useTheme) */
+:root[data-theme='dark'] {
   color-scheme: dark;
-  --bg: #17212b;
-  --panel: #0e1621;
-  --accent: #2b5278;
-  --text: #f5f5f5;
-  --muted: #7f91a4;
+  --wallpaper: linear-gradient(160deg, #0b0b0f 0%, #14101f 100%);
+  --panel: #212121;
+  --bubble-in: #212121;
+  --bubble-out: #8774e1;
+  --accent: #8774e1;
+  --text: #ffffff;
+  --muted: #aaaaaa;
+  --field: #181818;
+  --field-border: #3a3a3a;
+  --hover: #2c2c2c;
+  --selected: #8774e1;
+  --selected-text: #ffffff;
   --error: #ff6b6b;
+  --shadow: none;
+  --pattern-color: rgb(135 116 225 / 22%);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: var(--bg);
+  background: var(--wallpaper) fixed;
   color: var(--text);
+}
+
+/* Узор поверх градиента: иконки из assets/pattern.svg используются как маска, цвет берётся из темы */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--pattern-color);
+  -webkit-mask: url('./assets/pattern.svg') 0 0 / 360px 360px repeat;
+  mask: url('./assets/pattern.svg') 0 0 / 360px 360px repeat;
 }
 
 button,
@@ -27,6 +95,7 @@ button {
   border-radius: 8px;
   padding: 8px 14px;
   background: var(--accent);
+  color: var(--accent-text);
 }
 
 button:disabled {
@@ -35,10 +104,10 @@ button:disabled {
 }
 
 input {
-  border: 1px solid #2b3a4a;
+  border: 1px solid var(--field-border);
   border-radius: 8px;
   padding: 8px 10px;
-  background: var(--panel);
+  background: var(--field);
 }
 
 .login {
@@ -49,6 +118,7 @@ input {
   padding: 24px;
   border-radius: 12px;
   background: var(--panel);
+  box-shadow: var(--shadow);
 }
 
 .login label {
@@ -75,7 +145,10 @@ input {
 .chat-app {
   display: grid;
   grid-template-columns: 320px 1fr;
+  gap: 8px;
+  box-sizing: border-box;
   height: 100vh;
+  padding: 8px;
 }
 
 .sidebar {
@@ -84,15 +157,40 @@ input {
   gap: 8px;
   padding: 12px;
   overflow-y: auto;
+  border-radius: 16px;
   background: var(--panel);
+  box-shadow: var(--shadow);
 }
 
 .sidebar__header {
   display: flex;
-  justify-content: space-between;
+  gap: 8px;
   align-items: center;
   font-size: 13px;
   color: var(--muted);
+}
+
+.sidebar__instance {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+}
+
+.theme-toggle:hover {
+  background: var(--hover);
 }
 
 .new-chat {
@@ -110,12 +208,42 @@ input {
   display: grid;
   width: 100%;
   gap: 2px;
+  border-radius: 12px;
   text-align: left;
+  color: var(--text);
   background: transparent;
 }
 
-.chat-list__item--active {
-  background: var(--accent);
+.chat-list__item:hover {
+  background: var(--hover);
+}
+
+.chat-list__item--active,
+.chat-list__item--active:hover {
+  background: var(--selected);
+  color: var(--selected-text);
+}
+
+.chat-list__item--active .chat-list__preview {
+  color: inherit;
+  opacity: 0.8;
+}
+
+.chat-list__top {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.chat-list__time {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chat-list__item--active .chat-list__time {
+  color: inherit;
+  opacity: 0.8;
 }
 
 .chat-list__preview,
@@ -127,13 +255,16 @@ input {
 .conversation {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   min-height: 0;
 }
 
 .conversation__header {
   padding: 12px 16px;
+  border-radius: 16px;
   font-weight: 600;
   background: var(--panel);
+  box-shadow: var(--shadow);
 }
 
 .conversation__empty,
@@ -159,12 +290,18 @@ input {
   gap: 2px;
   padding: 8px 12px;
   border-radius: 12px;
-  background: #182533;
+  background: var(--bubble-in);
+  box-shadow: var(--shadow);
 }
 
 .message--out {
   align-self: flex-end;
-  background: var(--accent);
+  background: var(--bubble-out);
+}
+
+.message--out .message__meta {
+  color: inherit;
+  opacity: 0.7;
 }
 
 .message__text {
@@ -181,18 +318,29 @@ input {
 .composer {
   display: flex;
   gap: 8px;
-  padding: 12px;
+  padding: 8px;
+  border-radius: 24px;
   background: var(--panel);
+  box-shadow: var(--shadow);
 }
 
 .composer input {
   flex: 1;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  outline: none;
+}
+
+.composer button {
+  border-radius: 20px;
 }
 
 .conversation__offline {
   margin: 0;
   padding: 8px 16px;
-  background: #5a2a2a;
-  color: #ffd7d7;
+  border-radius: 12px;
+  background: var(--error);
+  color: #ffffff;
   font-size: 14px;
 }

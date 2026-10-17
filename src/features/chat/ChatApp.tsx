@@ -9,6 +9,7 @@ import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
 import { formatPhone } from './phone';
 import { useNotifications } from './useNotifications';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 interface Props {
   credentials: Credentials;
@@ -59,7 +60,8 @@ export function ChatApp({ credentials, onLogout }: Props) {
     <div className="chat-app">
       <aside className="sidebar">
         <header className="sidebar__header">
-          <span>Инстанс {credentials.idInstance}</span>
+          <ThemeToggle />
+          <span className="sidebar__instance">Инстанс {credentials.idInstance}</span>
           <button onClick={onLogout}>Выйти</button>
         </header>
         <NewChatForm client={client} onCreate={(chatId, phone) => dispatch({ type: 'chatOpened', chatId, phone })} />

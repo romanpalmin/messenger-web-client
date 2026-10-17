@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { ApiError, createApiClient } from '../../api/client';
 import type { Credentials } from '../../api/types';
 import { ChatList } from './ChatList';
@@ -31,6 +31,15 @@ export function ChatApp({ credentials, onLogout }: Props) {
     },
     () => setPollingStopped(true),
   );
+
+  const phone = activeChat?.phone;
+  useEffect(() => {
+    const prev = document.title;
+    document.title = phone ? formatPhone(phone) : 'Messenger';
+    return () => {
+      document.title = prev;
+    };
+  }, [phone]);
 
   async function send(text: string) {
     if (!activeChat) return;

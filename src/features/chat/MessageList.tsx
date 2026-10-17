@@ -13,7 +13,7 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
   return (
     <ul className="messages">
       {messages.map((message) => (
-        <li key={message.id} className={`message message--${message.direction}`}>
+        <li key={message.key} className={`message message--${message.direction}`}>
           <p className="message__text">{message.text}</p>
           <span className="message__meta">
             {formatTime(message.timestamp)}

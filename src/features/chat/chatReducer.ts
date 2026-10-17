@@ -24,7 +24,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         : state;
     case 'messageSending': {
       const message: ChatMessage = {
-        id: action.localId,
+        key: action.localId,
         direction: 'out',
         text: action.text,
         timestamp: action.timestamp,
@@ -35,7 +35,7 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
     case 'messageSent':
       return updateMessage(state, action.chatId, action.localId, (message) => ({
         ...message,
-        id: action.idMessage,
+        idMessage: action.idMessage,
         status: 'sent',
         error: undefined,
       }));
@@ -60,6 +60,6 @@ function updateMessage(
 ): ChatState {
   return updateChat(state, chatId, (chat) => ({
     ...chat,
-    messages: chat.messages.map((message) => (message.id === messageId ? update(message) : message)),
+    messages: chat.messages.map((message) => (message.key === messageId ? update(message) : message)),
   }));
 }

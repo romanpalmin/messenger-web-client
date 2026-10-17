@@ -1,8 +1,10 @@
 export type MessageStatus = 'sending' | 'sent' | 'failed';
 
 export interface ChatMessage {
-  /** Пока сообщение отправляется — локальный id, после ответа API — idMessage. */
-  id: string;
+  /** Стабильный ключ для списка: не меняется за всё время жизни сообщения (иначе React пересоздаст элемент). */
+  key: string;
+  /** Идентификатор сообщения в GREEN-API: у исходящего появляется после ответа, у входящего есть сразу. */
+  idMessage?: string;
   direction: 'in' | 'out';
   text: string;
   /** Секунды Unix, как в уведомлениях GREEN-API. */

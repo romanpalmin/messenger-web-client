@@ -20,7 +20,7 @@ describe('chatReducer', () => {
     expect(chatReducer(opened, { type: 'chatSelected', chatId: 'nope' })).toBe(opened);
   });
 
-  it('проводит сообщение через sending → sent и подменяет id на idMessage', () => {
+  it('проводит сообщение через sending → sent: ключ остаётся, idMessage добавляется', () => {
     const sending = chatReducer(opened, {
       type: 'messageSending',
       chatId: '1',
@@ -28,10 +28,16 @@ describe('chatReducer', () => {
       text: 'Привет',
       timestamp: 100,
     });
-    expect(sending.chats[0].messages[0]).toMatchObject({ id: 'local', status: 'sending', direction: 'out' });
+    expect(sending.chats[0].messages[0]).toMatchObject({ key: 'local', status: 'sending', direction: 'out' });
+    expect(sending.chats[0].messages[0].idMessage).toBeUndefined();
 
     const sent = chatReducer(sending, { type: 'messageSent', chatId: '1', localId: 'local', idMessage: 'm1' });
-    expect(sent.chats[0].messages[0]).toMatchObject({ id: 'm1', status: 'sent', text: 'Привет' });
+    expect(sent.chats[0].messages[0]).toMatchObject({
+      key: 'local',
+      idMessage: 'm1',
+      status: 'sent',
+      text: 'Привет',
+    });
   });
 
   it('помечает сообщение как failed с текстом ошибки', () => {

@@ -35,6 +35,8 @@ export function createApiClient(credentials: Credentials, fetchImpl: FetchLike =
     const response = await fetchImpl(`${base}/${path}`, {
       method,
       signal: init.signal,
+      // Без кеша: иначе браузер отвечает на receiveNotification статусом 304 и подставляет старое тело вместо очереди.
+      cache: 'no-store',
       headers: init.body === undefined ? undefined : { 'Content-Type': 'application/json' },
       body: init.body === undefined ? undefined : JSON.stringify(init.body),
     });

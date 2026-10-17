@@ -68,6 +68,12 @@ describe('createApiClient', () => {
     await expect(createApiClient(credentials).deleteNotification(7)).resolves.toEqual({ result: true });
   });
 
+  it('запрещает браузеру кешировать ответы (иначе 304 подменит очередь уведомлений)', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(new Response('null'));
+    await createApiClient(credentials, fetchImpl).receiveNotification();
+    expect(fetchImpl).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ cache: 'no-store' }));
+  });
+
   it('кодирует idInstance и токен в пути', async () => {
     const odd: Credentials = { apiUrl: 'https://api.test.local', idInstance: '1', apiTokenInstance: 'a/b c' };
     server.use(

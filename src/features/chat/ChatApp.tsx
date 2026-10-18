@@ -57,7 +57,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
   }
 
   return (
-    <div className="chat-app">
+    <div className={activeChat ? 'chat-app chat-app--chat-open' : 'chat-app'}>
       <aside className="sidebar">
         <header className="sidebar__header">
           <span className="sidebar__instance">Инстанс {credentials.idInstance}</span>
@@ -79,6 +79,26 @@ export function ChatApp({ credentials, onLogout }: Props) {
         {activeChat ? (
           <>
             <header className="conversation__header">
+              <button
+                type="button"
+                className="conversation__back"
+                aria-label="Назад к списку чатов"
+                onClick={() => dispatch({ type: 'chatClosed' })}
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M19 12H5M11 6l-6 6 6 6" />
+                </svg>
+              </button>
               <Avatar chatId={activeChat.chatId} size={38} />
               {formatPhone(activeChat.phone)}
             </header>

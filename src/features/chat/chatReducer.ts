@@ -5,6 +5,7 @@ export const initialChatState: ChatState = { chats: [], activeChatId: null };
 export type ChatAction =
   | { type: 'chatOpened'; chatId: string; phone: number }
   | { type: 'chatSelected'; chatId: string }
+  | { type: 'chatClosed' }
   | { type: 'messageSending'; chatId: string; localId: string; text: string; timestamp: number }
   | { type: 'messageSent'; chatId: string; localId: string; idMessage: string }
   | { type: 'messageFailed'; chatId: string; localId: string; error: string }
@@ -23,6 +24,9 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       return state.chats.some((chat) => chat.chatId === action.chatId)
         ? { ...state, activeChatId: action.chatId }
         : state;
+    // «Назад» на мобильном: чат остаётся в списке, просто ни один не открыт. Уже закрыт — состояние то же (bail-out).
+    case 'chatClosed':
+      return state.activeChatId === null ? state : { ...state, activeChatId: null };
     case 'messageSending': {
       const message: ChatMessage = {
         key: action.localId,

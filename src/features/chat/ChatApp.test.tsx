@@ -98,6 +98,23 @@ describe('ChatApp', () => {
   });
 });
 
+describe('ChatApp: мобильная навигация', () => {
+  it('«Назад» закрывает чат, но оставляет его в списке и позволяет открыть снова', async () => {
+    mockCheckAccount();
+    const user = userEvent.setup();
+    const { container } = render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+    await createChat(user);
+    expect(container.firstElementChild).toHaveClass('chat-app--chat-open');
+
+    await user.click(await screen.findByRole('button', { name: 'Назад к списку чатов' }));
+
+    expect(container.firstElementChild).not.toHaveClass('chat-app--chat-open');
+    expect(screen.getByText('Выберите чат или создайте новый')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /\+79001234567/ }));
+    expect(screen.getByLabelText('Сообщение')).toBeInTheDocument();
+  });
+});
+
 describe('ChatApp: входящие', () => {
   /** Отдаёт уведомления только после `gate.open()`, иначе они придут до создания чата и будут отброшены. */
   function mockNotifications(...bodies: unknown[]) {

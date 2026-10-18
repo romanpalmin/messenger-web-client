@@ -20,6 +20,14 @@ describe('chatReducer', () => {
     expect(chatReducer(opened, { type: 'chatSelected', chatId: 'nope' })).toBe(opened);
   });
 
+  it('закрывает чат, не удаляя его из списка; повторное закрытие возвращает то же состояние', () => {
+    const closed = chatReducer(opened, { type: 'chatClosed' });
+
+    expect(closed.activeChatId).toBeNull();
+    expect(closed.chats).toBe(opened.chats);
+    expect(chatReducer(closed, { type: 'chatClosed' })).toBe(closed);
+  });
+
   it('проводит сообщение через sending → sent: ключ остаётся, idMessage добавляется', () => {
     const sending = chatReducer(opened, {
       type: 'messageSending',

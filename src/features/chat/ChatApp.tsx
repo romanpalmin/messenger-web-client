@@ -84,7 +84,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
               <Avatar chatId={activeChat.chatId} size={38} />
               {formatPhone(activeChat.phone)}
             </header>
-            <MessageList messages={activeChat.messages} />
+            <MessageList key={activeChat.chatId} messages={activeChat.messages} />
             <MessageComposer onSend={send} />
           </>
         ) : (

@@ -49,7 +49,10 @@ export function LoginForm({ onLogin }: Props) {
   return (
     <form className="login" onSubmit={handleSubmit}>
       <h1>Вход</h1>
-      <p className="login__hint">Данные инстанса из личного кабинета GREEN-API. Они хранятся только в этой вкладке.</p>
+      <p className="login__hint">
+        Данные инстанса из личного кабинета GREEN-API. Адрес API тоже берите из кабинета: у инстанса он может отличаться
+        от стандартного (например, https://4100.api.green-api.com). Данные хранятся только в этой вкладке.
+      </p>
 
       <label>
         Адрес API

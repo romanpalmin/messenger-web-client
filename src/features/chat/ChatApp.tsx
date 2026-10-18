@@ -6,6 +6,7 @@ import { ChatList } from './ChatList';
 import { toReceivedAction } from './incoming';
 import { chatReducer } from './chatReducer';
 import { clearChatState, loadChatState, saveChatState } from './chatStorage';
+import { newLocalId } from './localId';
 import { MessageComposer } from './MessageComposer';
 import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
@@ -52,7 +53,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
   async function send(text: string) {
     if (!activeChat) return;
     const { chatId } = activeChat;
-    const localId = crypto.randomUUID();
+    const localId = newLocalId();
     dispatch({ type: 'messageSending', chatId, localId, text, timestamp: nowSeconds() });
     try {
       const { idMessage } = await client.sendMessage(chatId, text);

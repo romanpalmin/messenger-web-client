@@ -98,6 +98,36 @@ describe('ChatApp', () => {
   });
 });
 
+describe('ChatApp: сохранение чатов', () => {
+  it('после перезагрузки (повторного монтирования) чаты и открытый чат на месте', async () => {
+    mockCheckAccount();
+    const user = userEvent.setup();
+    const first = render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+    await createChat(user);
+    await screen.findByLabelText('Сообщение');
+    first.unmount();
+
+    render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+
+    expect(within(screen.getByRole('list')).getByText('+79001234567')).toBeInTheDocument();
+    expect(screen.getByLabelText('Сообщение')).toBeInTheDocument();
+  });
+
+  it('«Выйти» стирает сохранённые чаты и вызывает onLogout', async () => {
+    mockCheckAccount();
+    const user = userEvent.setup();
+    const onLogout = vi.fn();
+    render(<ChatApp credentials={credentials} onLogout={onLogout} />);
+    await createChat(user);
+    await screen.findByLabelText('Сообщение');
+
+    await user.click(screen.getByRole('button', { name: 'Выйти' }));
+
+    expect(onLogout).toHaveBeenCalled();
+    expect(sessionStorage.getItem(`messenger-web-client:chats:${credentials.idInstance}`)).toBeNull();
+  });
+});
+
 describe('ChatApp: мобильная навигация', () => {
   it('«Назад» закрывает чат, но оставляет его в списке и позволяет открыть снова', async () => {
     mockCheckAccount();

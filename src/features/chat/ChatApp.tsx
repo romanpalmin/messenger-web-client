@@ -4,7 +4,8 @@ import type { Credentials } from '../../api/types';
 import { Avatar } from './Avatar';
 import { ChatList } from './ChatList';
 import { toReceivedAction } from './incoming';
-import { chatReducer, initialChatState } from './chatReducer';
+import { chatReducer } from './chatReducer';
+import { clearChatState, loadChatState, saveChatState } from './chatStorage';
 import { MessageComposer } from './MessageComposer';
 import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
@@ -20,7 +21,7 @@ const nowSeconds = () => Math.floor(Date.now() / 1000);
 
 export function ChatApp({ credentials, onLogout }: Props) {
   const client = useMemo(() => createApiClient(credentials), [credentials]);
-  const [state, dispatch] = useReducer(chatReducer, initialChatState);
+  const [state, dispatch] = useReducer(chatReducer, credentials.idInstance, loadChatState);
   const [pollingStopped, setPollingStopped] = useState(false);
   const activeChat = state.chats.find((chat) => chat.chatId === state.activeChatId) ?? null;
 
@@ -32,6 +33,12 @@ export function ChatApp({ credentials, onLogout }: Props) {
     },
     () => setPollingStopped(true),
   );
+
+  // История переживает перезагрузку страницы; пишем после каждого изменения (объём небольшой, хранилище синхронное)
+  const { idInstance } = credentials;
+  useEffect(() => {
+    saveChatState(idInstance, state);
+  }, [idInstance, state]);
 
   const phone = activeChat?.phone;
   useEffect(() => {
@@ -61,7 +68,14 @@ export function ChatApp({ credentials, onLogout }: Props) {
       <aside className="sidebar">
         <header className="sidebar__header">
           <span className="sidebar__instance">Инстанс {credentials.idInstance}</span>
-          <button onClick={onLogout}>Выйти</button>
+          <button
+            onClick={() => {
+              clearChatState(idInstance);
+              onLogout();
+            }}
+          >
+            Выйти
+          </button>
         </header>
         <NewChatForm client={client} onCreate={(chatId, phone) => dispatch({ type: 'chatOpened', chatId, phone })} />
         <ChatList

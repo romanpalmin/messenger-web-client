@@ -22,4 +22,17 @@ describe('MessageList', () => {
     expect(after).toBe(before);
     expect(screen.getByText(/Отправлено/)).toBeInTheDocument();
   });
+
+  it('помечает серию подряд идущих сообщений одного автора', () => {
+    const messages: ChatMessage[] = [
+      { ...sending, key: 'a', text: 'Раз' },
+      { ...sending, key: 'b', text: 'Два' },
+      { ...sending, key: 'c', text: 'Три', direction: 'in' },
+    ];
+    render(<MessageList messages={messages} />);
+
+    expect(screen.getByText('Раз').closest('li')).not.toHaveClass('message--series');
+    expect(screen.getByText('Два').closest('li')).toHaveClass('message--series');
+    expect(screen.getByText('Три').closest('li')).not.toHaveClass('message--series');
+  });
 });

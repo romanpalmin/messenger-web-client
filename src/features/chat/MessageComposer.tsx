@@ -28,8 +28,10 @@ export function MessageComposer({ onSend }: Props) {
         onChange={(e) => setText(e.target.value)}
         autoComplete="off"
       />
-      <button type="submit" disabled={!text.trim()}>
-        Отправить
+      <button type="submit" className="composer__send" aria-label="Отправить" disabled={!text.trim()}>
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+          <path d="M3 20.5v-6.7l9-1.8-9-1.8V3.5L21.5 12 3 20.5z" fill="currentColor" />
+        </svg>
       </button>
     </form>
   );

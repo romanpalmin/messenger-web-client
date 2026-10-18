@@ -17,11 +17,11 @@ describe('ThemeToggle', () => {
     const user = userEvent.setup();
     render(<ThemeToggle />);
 
-    await user.click(screen.getByRole('button', { name: 'Включить тёмную тему' }));
+    await user.click(screen.getByRole('button', { name: 'Тёмная тема' }));
 
     expect(document.documentElement.dataset.theme).toBe('dark');
     expect(localStorage.getItem('theme')).toBe('dark');
-    expect(screen.getByRole('button', { name: 'Включить светлую тему' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Светлая тема' })).toBeInTheDocument();
   });
 
   it('читает сохранённый выбор при следующем запуске', () => {

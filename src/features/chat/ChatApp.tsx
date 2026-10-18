@@ -10,7 +10,6 @@ import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
 import { formatPhone } from './phone';
 import { useNotifications } from './useNotifications';
-import { ThemeToggle } from '../theme/ThemeToggle';
 
 interface Props {
   credentials: Credentials;
@@ -61,7 +60,6 @@ export function ChatApp({ credentials, onLogout }: Props) {
     <div className="chat-app">
       <aside className="sidebar">
         <header className="sidebar__header">
-          <ThemeToggle />
           <span className="sidebar__instance">Инстанс {credentials.idInstance}</span>
           <button onClick={onLogout}>Выйти</button>
         </header>

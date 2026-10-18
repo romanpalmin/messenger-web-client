@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useReducer, useState } from 'react';
 import { ApiError, createApiClient } from '../../api/client';
 import type { Credentials } from '../../api/types';
+import { Avatar } from './Avatar';
 import { ChatList } from './ChatList';
 import { toReceivedAction } from './incoming';
 import { chatReducer, initialChatState } from './chatReducer';
@@ -79,7 +80,10 @@ export function ChatApp({ credentials, onLogout }: Props) {
         )}
         {activeChat ? (
           <>
-            <header className="conversation__header">{formatPhone(activeChat.phone)}</header>
+            <header className="conversation__header">
+              <Avatar chatId={activeChat.chatId} size={38} />
+              {formatPhone(activeChat.phone)}
+            </header>
             <MessageList messages={activeChat.messages} />
             <MessageComposer onSend={send} />
           </>

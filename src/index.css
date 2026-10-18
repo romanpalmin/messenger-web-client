@@ -150,6 +150,8 @@ input {
 .chat-app {
   display: grid;
   grid-template-columns: 320px 1fr;
+  /* одна строка ровно на высоту окна: без minmax(0, …) строка растёт по содержимому и прокручивается вся страница */
+  grid-template-rows: minmax(0, 1fr);
   gap: 8px;
   box-sizing: border-box;
   height: 100vh;
@@ -162,7 +164,7 @@ input {
   gap: 8px;
   padding: 12px;
   overflow-y: auto;
-  border-radius: 16px;
+  border-radius: 28px;
   background: var(--panel);
   box-shadow: var(--shadow-panel);
 }
@@ -198,6 +200,12 @@ input {
   background: var(--hover);
 }
 
+.new-chat input,
+.new-chat button {
+  border-radius: 999px;
+  padding-inline: 16px;
+}
+
 .new-chat {
   display: grid;
   gap: 6px;
@@ -210,10 +218,11 @@ input {
 }
 
 .chat-list__item {
-  display: grid;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
-  gap: 2px;
-  border-radius: 12px;
+  border-radius: 16px;
   text-align: left;
   color: var(--text);
   background: transparent;
@@ -232,6 +241,21 @@ input {
 .chat-list__item--active .chat-list__preview {
   color: inherit;
   opacity: 0.8;
+}
+
+.chat-list__body {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  min-width: 0;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  color: #ffffff;
 }
 
 .chat-list__top {
@@ -273,8 +297,11 @@ input {
 }
 
 .conversation__header {
-  padding: 12px 16px;
-  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 20px 5px 5px;
+  border-radius: 999px;
   font-weight: 600;
   background: var(--panel);
   box-shadow: var(--shadow-panel);
@@ -301,6 +328,8 @@ input {
 }
 
 .message {
+  /* опора для абсолютно позиционированного .visually-hidden внутри: иначе он «вылезает» за прокрутку списка */
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -376,7 +405,7 @@ input {
   align-items: flex-end;
   gap: 8px;
   padding: 4px 4px 4px 18px;
-  border-radius: 24px;
+  border-radius: 23px;
   background: var(--panel);
   box-shadow: var(--shadow-panel);
 }

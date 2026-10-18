@@ -281,6 +281,13 @@ input {
   color: var(--muted);
 }
 
+/* превью — одна строка с многоточием, даже если сообщение длинное или многострочное */
+.chat-list__preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .conversation {
   display: flex;
   flex-direction: column;

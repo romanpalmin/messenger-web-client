@@ -373,7 +373,7 @@ input {
 
 .composer {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 8px;
   padding: 4px 4px 4px 18px;
   border-radius: 24px;
@@ -381,13 +381,19 @@ input {
   box-shadow: var(--shadow-panel);
 }
 
-.composer input {
+.composer textarea {
   flex: 1;
+  box-sizing: border-box;
+  max-height: 160px;
   border: 0;
-  border-radius: 16px;
-  padding: 0;
+  padding: 8px 0;
   background: transparent;
   outline: none;
+  resize: none;
+  font: inherit;
+  color: inherit;
+  line-height: 1.4;
+  scrollbar-width: thin;
 }
 
 .composer__send {

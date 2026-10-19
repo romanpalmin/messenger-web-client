@@ -12,6 +12,7 @@ import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
 import { formatPhone } from './phone';
 import { useNotifications } from './useNotifications';
+import { usePollingLock } from './usePollingLock';
 
 interface Props {
   credentials: Credentials;
@@ -26,6 +27,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
   const [pollingStopped, setPollingStopped] = useState(false);
   const activeChat = state.chats.find((chat) => chat.chatId === state.activeChatId) ?? null;
 
+  const isPollingOwner = usePollingLock(`messenger-polling:${credentials.idInstance}`);
   useNotifications(
     client,
     (body) => {
@@ -33,6 +35,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
       if (action) dispatch(action);
     },
     () => setPollingStopped(true),
+    isPollingOwner,
   );
 
   // История переживает перезагрузку страницы; пишем после каждого изменения (объём небольшой, хранилище синхронное)
@@ -78,6 +81,12 @@ export function ChatApp({ credentials, onLogout }: Props) {
             Выйти
           </button>
         </header>
+        {!isPollingOwner && (
+          <p role="status" className="sidebar__notice">
+            Приложение открыто в другой вкладке: ответы приходят туда. Как только она закроется, получение продолжится
+            здесь.
+          </p>
+        )}
         <NewChatForm client={client} onCreate={(chatId, phone) => dispatch({ type: 'chatOpened', chatId, phone })} />
         <ChatList
           chats={state.chats}

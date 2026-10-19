@@ -15,6 +15,9 @@
   --selected: #3390ec;
   --selected-text: #ffffff;
   --error: #d93025;
+  --warning-bg: #fff3cd;
+  --warning-border: #f2b83d;
+  --warning-text: #6b4600;
   --shadow: 0 1px 3px rgb(0 0 0 / 15%);
   --shadow-panel: 0 6px 10px rgb(0 0 0 / 22%);
   --pattern-color: rgb(30 100 55 / 25%);
@@ -38,6 +41,9 @@
     --selected: #8774e1;
     --selected-text: #ffffff;
     --error: #ff6b6b;
+    --warning-bg: #3d3010;
+    --warning-border: #b8861b;
+    --warning-text: #ffd978;
     --shadow: none;
     --shadow-panel: 0 6px 10px rgb(0 0 0 / 50%);
     --pattern-color: rgb(135 116 225 / 22%);
@@ -60,6 +66,9 @@
   --selected: #8774e1;
   --selected-text: #ffffff;
   --error: #ff6b6b;
+  --warning-bg: #3d3010;
+  --warning-border: #b8861b;
+  --warning-text: #ffd978;
   --shadow: none;
   --shadow-panel: 0 6px 10px rgb(0 0 0 / 50%);
   --pattern-color: rgb(135 116 225 / 22%);
@@ -175,6 +184,16 @@ input {
   align-items: center;
   font-size: 13px;
   color: var(--muted);
+}
+
+.sidebar__notice {
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--warning-border);
+  border-radius: 12px;
+  background: var(--warning-bg);
+  font-size: 13px;
+  color: var(--warning-text);
 }
 
 .sidebar__instance {

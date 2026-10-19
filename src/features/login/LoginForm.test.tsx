@@ -16,6 +16,12 @@ async function fillAndSubmit() {
 }
 
 describe('LoginForm', () => {
+  it('не даёт браузеру подставлять сохранённые логин и пароль', () => {
+    render(<LoginForm onLogin={vi.fn()} />);
+    expect(screen.getByLabelText('idInstance')).toHaveAttribute('autocomplete', 'off');
+    expect(screen.getByLabelText('apiTokenInstance')).toHaveAttribute('autocomplete', 'new-password');
+  });
+
   it('входит, если инстанс авторизован', async () => {
     server.use(http.get(stateUrl, () => HttpResponse.json({ stateInstance: 'authorized' })));
     const onLogin = vi.fn();

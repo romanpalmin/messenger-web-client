@@ -56,26 +56,41 @@ export function LoginForm({ onLogin }: Props) {
 
       <label>
         Адрес API
-        <input value={apiUrl} onChange={(e) => setApiUrl(e.target.value)} required inputMode="url" autoComplete="off" />
+        <input
+          name="apiUrl"
+          value={apiUrl}
+          onChange={(e) => setApiUrl(e.target.value)}
+          required
+          inputMode="url"
+          autoComplete="off"
+        />
       </label>
       <label>
         idInstance
         <input
+          name="idInstance"
           value={idInstance}
           onChange={(e) => setIdInstance(e.target.value)}
           required
           inputMode="numeric"
           autoComplete="off"
+          data-1p-ignore
+          data-lpignore="true"
         />
       </label>
       <label>
         apiTokenInstance
         <input
+          name="apiTokenInstance"
           type="password"
           value={apiTokenInstance}
           onChange={(e) => setApiTokenInstance(e.target.value)}
           required
-          autoComplete="off"
+          // Chrome игнорирует "off" у полей пароля и подставляет сохранённый логин в предыдущее поле;
+          // "new-password" говорит, что это не форма входа на сайт, а ввод нового секрета
+          autoComplete="new-password"
+          data-1p-ignore
+          data-lpignore="true"
         />
       </label>
 

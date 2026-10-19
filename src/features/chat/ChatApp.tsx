@@ -47,7 +47,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
   const title = activeChat ? chatTitle(activeChat) : null;
   useEffect(() => {
     const prev = document.title;
-    document.title = title ?? 'Messenger';
+    document.title = title ?? 'Messenger — GREEN-API';
     return () => {
       document.title = prev;
     };

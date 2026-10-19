@@ -136,7 +136,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
                 </svg>
               </button>
               <Avatar chatId={activeChat.chatId} size={38} />
-              {chatTitle(activeChat)}
+              <span className="conversation__title">{chatTitle(activeChat)}</span>
             </header>
             <MessageList key={activeChat.chatId} messages={activeChat.messages} />
             <MessageComposer onSend={send} />

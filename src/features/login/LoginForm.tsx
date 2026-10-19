@@ -48,7 +48,10 @@ export function LoginForm({ onLogin }: Props) {
 
   return (
     <form className="login" onSubmit={handleSubmit}>
-      <h1>Вход</h1>
+      <div className="login__brand">
+        <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="" width="48" height="48" />
+        <h1>Вход</h1>
+      </div>
       <p className="login__hint">
         Данные инстанса из личного кабинета GREEN-API. Адрес API тоже берите из кабинета: у инстанса он может отличаться
         от стандартного (например, https://4100.api.green-api.com). Данные хранятся только в этой вкладке.

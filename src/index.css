@@ -135,6 +135,16 @@ input {
   box-shadow: var(--shadow-panel);
 }
 
+.login__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.login__brand h1 {
+  margin: 0;
+}
+
 .login label {
   display: grid;
   gap: 4px;

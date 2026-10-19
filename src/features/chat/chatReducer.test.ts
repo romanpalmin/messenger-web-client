@@ -82,6 +82,13 @@ describe('chatReducer', () => {
       expect(chatReducer(once, received)).toBe(once);
     });
 
+    it('запоминает имя собеседника в чате, созданном по номеру, и не перезаписывает уже известное', () => {
+      const named = chatReducer(opened, { ...received, name: 'Анна' });
+      expect(named.chats[0]).toMatchObject({ phone: 79001234567, name: 'Анна' });
+      const again = chatReducer(named, { ...received, idMessage: 'A2', name: 'Анна Т.' });
+      expect(again.chats[0].name).toBe('Анна');
+    });
+
     it('создаёт чат, если пишет собеседник, которого не открывали, и не делает его активным', () => {
       const next = chatReducer(opened, { ...received, chatId: 'other', name: 'Анна' });
       expect(next.activeChatId).toBe('1');

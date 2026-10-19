@@ -70,7 +70,12 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         const created: Chat = { chatId: action.chatId, name: action.name, messages: [message] };
         return { ...state, chats: [...state.chats, created] };
       }
-      return updateChat(state, action.chatId, (c) => ({ ...c, messages: [...c.messages, message] }));
+      // имя из уведомления запоминаем, если ещё не знали (у чата, созданного по номеру, его нет)
+      return updateChat(state, action.chatId, (c) => ({
+        ...c,
+        name: c.name ?? action.name,
+        messages: [...c.messages, message],
+      }));
     }
   }
 }

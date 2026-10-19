@@ -53,6 +53,18 @@ export function ChatApp({ credentials, onLogout }: Props) {
     };
   }, [title]);
 
+  async function createChat(chatId: string, phone: number) {
+    dispatch({ type: 'chatOpened', chatId, phone });
+    // Имя собеседника подгружаем отдельно: чат уже открыт, а сбой (лимит, скрытый профиль) просто оставляет номер.
+    try {
+      const info = await client.getContactInfo(chatId);
+      const name = info.contactName || info.name || info.username;
+      if (name) dispatch({ type: 'chatNamed', chatId, name });
+    } catch {
+      // имя необязательно
+    }
+  }
+
   async function send(text: string) {
     if (!activeChat) return;
     const { chatId } = activeChat;
@@ -87,7 +99,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
             здесь.
           </p>
         )}
-        <NewChatForm client={client} onCreate={(chatId, phone) => dispatch({ type: 'chatOpened', chatId, phone })} />
+        <NewChatForm client={client} onCreate={createChat} />
         <ChatList
           chats={state.chats}
           activeChatId={state.activeChatId}

@@ -23,6 +23,16 @@ export interface CheckAccountResponse {
   phoneNumber?: number;
 }
 
+export interface ContactInfoResponse {
+  chatId: string;
+  /** Имя из профиля Telegram. */
+  name?: string;
+  /** Имя из телефонной книги инстанса (как собеседник сохранён у нас). */
+  contactName?: string;
+  /** Публичное имя вида «@username». */
+  username?: string;
+}
+
 export interface DeleteNotificationResponse {
   result: boolean;
   reason?: string;

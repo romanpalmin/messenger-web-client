@@ -7,11 +7,12 @@ import { ChatApp } from './ChatApp';
 const credentials = { apiUrl: 'https://api.test.local', idInstance: '1000000001', apiTokenInstance: 'fake-token' };
 const base = 'https://api.test.local/waInstance1000000001';
 
-function mockCheckAccount(exist = true) {
+function mockCheckAccount(exist = true, contact: { name?: string } = {}) {
   server.use(
     http.post(`${base}/checkAccount/fake-token`, () =>
       HttpResponse.json(exist ? { exist: true, chatId: '10000000' } : { exist: false, chatId: '' }),
     ),
+    http.post(`${base}/getContactInfo/fake-token`, () => HttpResponse.json({ chatId: '10000000', ...contact })),
   );
 }
 
@@ -31,6 +32,22 @@ describe('ChatApp', () => {
     const list = await screen.findByRole('list');
     expect(within(list).getByText('+79001234567')).toBeInTheDocument();
     expect(screen.getByLabelText('Сообщение')).toBeInTheDocument();
+  });
+
+  it('подставляет имя собеседника из профиля, а при сбое запроса оставляет номер', async () => {
+    mockCheckAccount(true, { name: 'Анна Тестова' });
+    const user = userEvent.setup();
+    const { unmount } = render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+    await createChat(user);
+    expect(await within(await screen.findByRole('list')).findByText('Анна Тестова')).toBeInTheDocument();
+    unmount();
+    sessionStorage.clear();
+
+    mockCheckAccount();
+    server.use(http.post(`${base}/getContactInfo/fake-token`, () => new HttpResponse(null, { status: 500 })));
+    render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+    await createChat(user);
+    expect(within(await screen.findByRole('list')).getByText('+79001234567')).toBeInTheDocument();
   });
 
   it('сообщает, что на номере нет Telegram', async () => {

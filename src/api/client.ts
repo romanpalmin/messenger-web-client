@@ -1,5 +1,6 @@
 import type {
   CheckAccountResponse,
+  ContactInfoResponse,
   Credentials,
   DeleteNotificationResponse,
   ReceivedNotification,
@@ -55,6 +56,11 @@ export function createApiClient(credentials: Credentials, fetchImpl: FetchLike =
     /** Номер в международном формате без «+» превращается в chatId. */
     checkAccount(phoneNumber: number, signal?: AbortSignal) {
       return request<CheckAccountResponse>('POST', `checkAccount/${token}`, { body: { phoneNumber }, signal });
+    },
+
+    /** Профиль собеседника по chatId (имя, username); для групповых чатов сервис отвечает ошибкой 400. */
+    getContactInfo(chatId: string, signal?: AbortSignal) {
+      return request<ContactInfoResponse>('POST', `getContactInfo/${token}`, { body: { chatId }, signal });
     },
 
     sendMessage(chatId: string, message: string, signal?: AbortSignal) {

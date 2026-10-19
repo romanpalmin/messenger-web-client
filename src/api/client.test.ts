@@ -33,6 +33,20 @@ describe('createApiClient', () => {
     expect(received).toEqual({ phoneNumber: 79876543210 });
   });
 
+  it('getContactInfo отправляет chatId и возвращает профиль собеседника', async () => {
+    let received: unknown;
+    server.use(
+      http.post(`${base}/getContactInfo/fake-token`, async ({ request }) => {
+        received = await request.json();
+        return HttpResponse.json({ chatId: '10000000', name: 'Анна Тестова', username: '@anna' });
+      }),
+    );
+    await expect(createApiClient(credentials).getContactInfo('10000000')).resolves.toMatchObject({
+      name: 'Анна Тестова',
+    });
+    expect(received).toEqual({ chatId: '10000000' });
+  });
+
   it('sendMessage отправляет chatId и текст', async () => {
     let received: unknown;
     server.use(

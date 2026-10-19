@@ -9,6 +9,7 @@ export type ChatAction =
   | { type: 'messageSending'; chatId: string; localId: string; text: string; timestamp: number }
   | { type: 'messageSent'; chatId: string; localId: string; idMessage: string }
   | { type: 'messageFailed'; chatId: string; localId: string; error: string }
+  | { type: 'chatNamed'; chatId: string; name: string }
   | { type: 'messageReceived'; chatId: string; name?: string; idMessage: string; text: string; timestamp: number };
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
@@ -22,6 +23,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
           )
         : [...state.chats, { chatId: action.chatId, phone: action.phone, messages: [] } satisfies Chat];
       return { chats, activeChatId: action.chatId };
+    }
+    case 'chatNamed': {
+      const chat = state.chats.find((c) => c.chatId === action.chatId);
+      if (!chat || chat.name === action.name) return state;
+      return updateChat(state, action.chatId, (c) => ({ ...c, name: action.name }));
     }
     case 'chatSelected':
       return state.chats.some((chat) => chat.chatId === action.chatId)

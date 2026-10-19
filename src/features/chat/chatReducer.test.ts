@@ -67,6 +67,13 @@ describe('chatReducer', () => {
     expect(state.chats[1].messages).toHaveLength(1);
   });
 
+  it('chatNamed задаёт имя; то же имя или неизвестный чат не меняют состояние', () => {
+    const named = chatReducer(opened, { type: 'chatNamed', chatId: '1', name: 'Анна' });
+    expect(named.chats[0].name).toBe('Анна');
+    expect(chatReducer(named, { type: 'chatNamed', chatId: '1', name: 'Анна' })).toBe(named);
+    expect(chatReducer(named, { type: 'chatNamed', chatId: 'nope', name: 'Борис' })).toBe(named);
+  });
+
   describe('messageReceived', () => {
     const received = { type: 'messageReceived', chatId: '1', idMessage: 'A1', text: 'Привет', timestamp: 5 } as const;
 

@@ -24,8 +24,6 @@ dist-ssr
 *.sw?
 
 # Рабочие материалы (не для публичного репозитория)
-CLAUDE.md
 JOURNAL.md
 docs/
-.claude/
 .env*

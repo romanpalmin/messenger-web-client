@@ -25,7 +25,8 @@ function isChat(value: unknown): value is Chat {
   return (
     isRecord(value) &&
     typeof value.chatId === 'string' &&
-    typeof value.phone === 'number' &&
+    (value.phone === undefined || typeof value.phone === 'number') &&
+    (value.name === undefined || typeof value.name === 'string') &&
     Array.isArray(value.messages) &&
     value.messages.every(isMessage)
   );

@@ -10,7 +10,7 @@ import { newLocalId } from './localId';
 import { MessageComposer } from './MessageComposer';
 import { MessageList } from './MessageList';
 import { NewChatForm } from './NewChatForm';
-import { formatPhone } from './phone';
+import { chatTitle } from './chatTitle';
 import { useNotifications } from './useNotifications';
 import { usePollingLock } from './usePollingLock';
 
@@ -44,14 +44,14 @@ export function ChatApp({ credentials, onLogout }: Props) {
     saveChatState(idInstance, state);
   }, [idInstance, state]);
 
-  const phone = activeChat?.phone;
+  const title = activeChat ? chatTitle(activeChat) : null;
   useEffect(() => {
     const prev = document.title;
-    document.title = phone ? formatPhone(phone) : 'Messenger';
+    document.title = title ?? 'Messenger';
     return () => {
       document.title = prev;
     };
-  }, [phone]);
+  }, [title]);
 
   async function send(text: string) {
     if (!activeChat) return;
@@ -124,7 +124,7 @@ export function ChatApp({ credentials, onLogout }: Props) {
                 </svg>
               </button>
               <Avatar chatId={activeChat.chatId} size={38} />
-              {formatPhone(activeChat.phone)}
+              {chatTitle(activeChat)}
             </header>
             <MessageList key={activeChat.chatId} messages={activeChat.messages} />
             <MessageComposer onSend={send} />

@@ -187,6 +187,21 @@ describe('ChatApp: входящие', () => {
     expect(screen.getAllByText('Ответ собеседника')).toHaveLength(2);
   });
 
+  it('создаёт чат, когда первым пишет собеседник, которого не открывали по номеру', async () => {
+    const openGate = mockNotifications({
+      ...incoming('B1', 'Здравствуйте, это первое сообщение'),
+      senderData: { chatId: '20000000', sender: '20000000', senderName: 'Анна' },
+    });
+    render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);
+    openGate();
+
+    const list = await screen.findByRole('list');
+    expect(within(list).getByText('Анна')).toBeInTheDocument();
+    expect(within(list).getByText('Здравствуйте, это первое сообщение')).toBeInTheDocument();
+    // активным чат не становится: пользователя не выдёргивают из текущего экрана
+    expect(screen.getByText('Выберите чат или создайте новый')).toBeInTheDocument();
+  });
+
   it('при 401 останавливает опрос и сообщает об этом', async () => {
     server.use(http.get(`${base}/receiveNotification/fake-token`, () => new HttpResponse(null, { status: 401 })));
     render(<ChatApp credentials={credentials} onLogout={vi.fn()} />);

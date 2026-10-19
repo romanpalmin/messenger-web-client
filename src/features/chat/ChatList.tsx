@@ -1,5 +1,5 @@
 import { Avatar } from './Avatar';
-import { formatPhone } from './phone';
+import { chatTitle } from './chatTitle';
 import { formatTime } from './time';
 import type { Chat } from './types';
 
@@ -26,7 +26,7 @@ export function ChatList({ chats, activeChatId, onSelect }: Props) {
               <Avatar chatId={chat.chatId} />
               <span className="chat-list__body">
                 <span className="chat-list__top">
-                  <span className="chat-list__name">{formatPhone(chat.phone)}</span>
+                  <span className="chat-list__name">{chatTitle(chat)}</span>
                   {last && (
                     <time className="chat-list__time" dateTime={new Date(last.timestamp * 1000).toISOString()}>
                       {formatTime(last.timestamp)}

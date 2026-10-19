@@ -36,6 +36,16 @@ describe('chatStorage', () => {
     });
   });
 
+  it('читает чат без номера телефона (его создало входящее сообщение)', () => {
+    const fromIncoming: ChatState = {
+      activeChatId: null,
+      chats: [{ chatId: '2@c.us', name: 'Анна', messages: [] }],
+    };
+    saveChatState('1', fromIncoming);
+
+    expect(loadChatState('1').chats[0]).toEqual({ chatId: '2@c.us', name: 'Анна', messages: [] });
+  });
+
   it('чаты разных инстансов не смешиваются', () => {
     saveChatState('1', state);
 

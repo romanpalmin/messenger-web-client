@@ -15,7 +15,10 @@ export interface ChatMessage {
 
 export interface Chat {
   chatId: string;
-  phone: number;
+  /** Есть у чатов, созданных по номеру; у чата, который начал собеседник, номера может не быть. */
+  phone?: number;
+  /** Имя из уведомления (`senderName`/`chatName`) для чата, созданного входящим сообщением. */
+  name?: string;
   messages: ChatMessage[];
 }
 

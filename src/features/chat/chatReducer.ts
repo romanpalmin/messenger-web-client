@@ -9,14 +9,17 @@ export type ChatAction =
   | { type: 'messageSending'; chatId: string; localId: string; text: string; timestamp: number }
   | { type: 'messageSent'; chatId: string; localId: string; idMessage: string }
   | { type: 'messageFailed'; chatId: string; localId: string; error: string }
-  | { type: 'messageReceived'; chatId: string; idMessage: string; text: string; timestamp: number };
+  | { type: 'messageReceived'; chatId: string; name?: string; idMessage: string; text: string; timestamp: number };
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
     case 'chatOpened': {
       const exists = state.chats.some((chat) => chat.chatId === action.chatId);
+      // чат мог появиться раньше от входящего сообщения, тогда у него ещё нет номера: дописываем
       const chats = exists
-        ? state.chats
+        ? state.chats.map((chat) =>
+            chat.chatId === action.chatId && chat.phone === undefined ? { ...chat, phone: action.phone } : chat,
+          )
         : [...state.chats, { chatId: action.chatId, phone: action.phone, messages: [] } satisfies Chat];
       return { chats, activeChatId: action.chatId };
     }
@@ -52,8 +55,8 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       }));
     case 'messageReceived': {
       const chat = state.chats.find((c) => c.chatId === action.chatId);
-      // Чужой чат (не открывали по номеру) игнорируем; повторное уведомление с тем же idMessage — тоже.
-      if (!chat || chat.messages.some((m) => m.idMessage === action.idMessage)) return state;
+      // Повторное уведомление с тем же idMessage игнорируем.
+      if (chat?.messages.some((m) => m.idMessage === action.idMessage)) return state;
       const message: ChatMessage = {
         key: action.idMessage,
         idMessage: action.idMessage,
@@ -62,6 +65,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         timestamp: action.timestamp,
         status: 'sent',
       };
+      // Пишет собеседник, которого мы не открывали: создаём чат, но активным не делаем, чтобы не выдернуть пользователя.
+      if (!chat) {
+        const created: Chat = { chatId: action.chatId, name: action.name, messages: [message] };
+        return { ...state, chats: [...state.chats, created] };
+      }
       return updateChat(state, action.chatId, (c) => ({ ...c, messages: [...c.messages, message] }));
     }
   }

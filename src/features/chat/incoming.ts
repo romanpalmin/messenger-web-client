@@ -18,5 +18,8 @@ export function toReceivedAction(body: NotificationBody): ChatAction | null {
     text = messageData.extendedTextMessageData.text;
   }
   if (!text) return null;
-  return { type: 'messageReceived', chatId: senderData.chatId, idMessage, text, timestamp };
+  // групповые чаты (WhatsApp) в клиенте не поддерживаются: личные переписки по номеру
+  if (senderData.chatId.endsWith('@g.us')) return null;
+  const name = senderData.senderName || senderData.chatName || undefined;
+  return { type: 'messageReceived', chatId: senderData.chatId, name, idMessage, text, timestamp };
 }

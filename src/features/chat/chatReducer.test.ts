@@ -82,8 +82,30 @@ describe('chatReducer', () => {
       expect(chatReducer(once, received)).toBe(once);
     });
 
-    it('игнорирует сообщение из чата, который не открывали', () => {
-      expect(chatReducer(opened, { ...received, chatId: 'other' })).toBe(opened);
+    it('создаёт чат, если пишет собеседник, которого не открывали, и не делает его активным', () => {
+      const next = chatReducer(opened, { ...received, chatId: 'other', name: 'Анна' });
+      expect(next.activeChatId).toBe('1');
+      expect(next.chats).toHaveLength(2);
+      expect(next.chats[1]).toMatchObject({
+        chatId: 'other',
+        name: 'Анна',
+        messages: [{ idMessage: 'A1', text: 'Привет' }],
+      });
+      expect(next.chats[1].phone).toBeUndefined();
+    });
+
+    it('повтор уведомления от нового собеседника не создаёт второй чат и второе сообщение', () => {
+      const once = chatReducer(opened, { ...received, chatId: 'other' });
+      expect(chatReducer(once, { ...received, chatId: 'other' })).toBe(once);
+    });
+
+    it('когда номер этого собеседника введут вручную, чат получает номер и не дублируется', () => {
+      const fromIncoming = chatReducer(opened, { ...received, chatId: 'other', name: 'Анна' });
+      const next = chatReducer(fromIncoming, { type: 'chatOpened', chatId: 'other', phone: 79005550000 });
+      expect(next.chats).toHaveLength(2);
+      expect(next.chats[1]).toMatchObject({ chatId: 'other', phone: 79005550000, name: 'Анна' });
+      expect(next.chats[1].messages).toHaveLength(1);
+      expect(next.activeChatId).toBe('other');
     });
   });
 });

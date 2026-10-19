@@ -15,6 +15,7 @@ describe('toReceivedAction', () => {
     expect(toReceivedAction(body)).toEqual({
       type: 'messageReceived',
       chatId: '100',
+      name: undefined,
       idMessage: 'A1',
       text: 'Привет',
       timestamp: 10,
@@ -50,5 +51,27 @@ describe('toReceivedAction', () => {
     expect(toReceivedAction(file)).toBeNull();
     expect(toReceivedAction(echo)).toBeNull();
     expect(toReceivedAction({ typeWebhook: 'stateInstanceChanged' })).toBeNull();
+  });
+
+  it('передаёт имя собеседника для чата, который создаётся входящим сообщением', () => {
+    const body = {
+      typeWebhook: 'incomingMessageReceived',
+      timestamp: 12,
+      idMessage: 'A5',
+      senderData: { chatId: '100', sender: '100', senderName: 'Анна' },
+      messageData: { typeMessage: 'textMessage', textMessageData: { textMessage: 'Привет' } },
+    } as NotificationBody;
+    expect(toReceivedAction(body)).toMatchObject({ chatId: '100', name: 'Анна' });
+  });
+
+  it('пропускает сообщения из групповых чатов', () => {
+    const body = {
+      typeWebhook: 'incomingMessageReceived',
+      timestamp: 13,
+      idMessage: 'A6',
+      senderData: { chatId: '120363@g.us', sender: '100@c.us' },
+      messageData: { typeMessage: 'textMessage', textMessageData: { textMessage: 'в группе' } },
+    } as NotificationBody;
+    expect(toReceivedAction(body)).toBeNull();
   });
 });
